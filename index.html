@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>放上你的地圖</title>
+    <title>放上自己的登山軌跡KML、GPX</title>
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.120/Build/Cesium/Cesium.js"></script>
     <link
       href="https://cesium.com/downloads/cesiumjs/releases/1.120/Build/Cesium/Widgets/widgets.css"
@@ -28,12 +28,26 @@
     <div id="cesiumContainer"></div>
     <script>
       // 創建Cesium Viewer實例
-      var viewer = new Cesium.Viewer("cesiumContainer");
+      var viewer = new Cesium.Viewer("cesiumContainer", {
+        // terrainProvider: Cesium.createWorldTerrain(), // 加载全球地形
+        imageryProvider: false, // 关闭默认的影像图层
+        animation: false,
+        timeline: false,
+        infoBox: false, // 隱藏信息框
+        selectionIndicator: false, // 隱藏選擇指示器
+        navigationHelpButton: false, // 隱藏導航幫助按鈕
+        geocoder: false, // 隱藏地理編碼搜尋框
+        homeButton: false, // 隱藏首頁按鈕
+        sceneModePicker: false, // 隱藏2D/3D切換按鈕
+        baseLayerPicker: false, // 隱藏圖層選擇器
+        fullscreenButton: false, // 隱藏全螢幕按鈕
+        vrButton: false, // 隱藏VR模式按鈕
+        creditsDisplay: false, // 隱藏版權信息
+      });
 
       // 添加WMTS圖層
       viewer.imageryLayers.addImageryProvider(
         new Cesium.UrlTemplateImageryProvider({
-          // 這邊是用內政部的通用電子地圖，可以去內政部國土測繪參考，如果你有放其他的底圖的話。
           url: "https://wmts.nlsc.gov.tw/wmts/EMAP5/default/EPSG:3857/{z}/{y}/{x}.png",
           tilingScheme: new Cesium.WebMercatorTilingScheme(),
           maximumLevel: 18,
@@ -41,10 +55,27 @@
       );
 
       // 設定視角到台灣
-      // 在 CesiumJS 中，攝像機的高度並不像 OpenLayers 那樣直接使用縮放級別（zoom level）的概念，但可以通過計算來模擬這種效果。這涉及將縮放級別轉換為對應的高度。
       viewer.camera.setView({
-        destination: Cesium.Cartesian3.fromDegrees(121.5, 25, 150000.0), // 設置初始視角，經度、緯度、高度(km)，所以如果要像openlayers有zoom的感覺需要自己設定in out的公里數
+        destination: Cesium.Cartesian3.fromDegrees(120.9, 23.7, 800000.0),
       });
+
+      // 加載 KML 文件
+      Cesium.KmlDataSource.load("20240821雪山北峰單攻.kml")
+        .then(function (dataSource) {
+          viewer.dataSources.add(dataSource);
+        })
+        .catch(function (error) {
+          console.log("KML 加載失敗:", error);
+        });
+
+      // 加載 GPX 文件
+      Cesium.GpxDataSource.load("浸水營.gpx")
+        .then(function (dataSource) {
+          viewer.dataSources.add(dataSource);
+        })
+        .catch(function (error) {
+          console.log("GPX 加載失敗:", error);
+        });
     </script>
   </body>
 </html>
