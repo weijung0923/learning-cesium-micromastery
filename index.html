@@ -29,8 +29,7 @@
     <script>
       // 創建Cesium Viewer實例
       var viewer = new Cesium.Viewer("cesiumContainer", {
-        // terrainProvider: Cesium.createWorldTerrain(), // 加载全球地形
-        imageryProvider: false, // 关闭默认的影像图层
+        imageryProvider: false, // 關閉預設的影像圖層
         animation: false,
         timeline: false,
         infoBox: false, // 隱藏信息框
@@ -65,7 +64,7 @@
           viewer.dataSources.add(dataSource);
         })
         .catch(function (error) {
-          console.log("KML 加載失敗:", error);
+          console.log("KML 載入失敗:", error);
         });
 
       // 加載 GPX 文件
@@ -74,7 +73,7 @@
           viewer.dataSources.add(dataSource);
         })
         .catch(function (error) {
-          console.log("GPX 加載失敗:", error);
+          console.log("GPX 載入失敗:", error);
         });
     </script>
   </body>
